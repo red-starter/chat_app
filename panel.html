@@ -1,0 +1,146 @@
+<link rel="stylesheet" href="panelstyle.css">
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+<div class="container">
+  <div class="row">
+    <div class="content">
+      <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+           <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+              Suzuki
+            </a>
+          </h4>
+        </div>
+        <div id="collapse0" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <div class="panel-content">
+              Suzuki                            
+            </div>                            
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+         <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+            Chevrolet
+          </a>
+        </h4>
+
+      </div>
+      <div id="collapse1" class="panel-collapse collapse">
+        <div class="panel-body">
+         <div class="panel-content">
+          Chevrolet                            
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+     <h4 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+        Volvo
+      </a>
+    </h4>
+
+  </div>
+  <div id="collapse2" class="panel-collapse collapse">
+    <div class="panel-body">
+     <div class="panel-content">
+      Volvo                          
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<button type="button" id="mybutton" >Wasssup?</button>
+<script>
+
+  // collapses the specified panel of the accordion 
+
+  $(document).ready(function(){
+    function toggle_panel(num){
+      $('#collapse'+num.toString()).collapse('toggle');
+      return true;
+    }
+    var index=0
+    //$( "#collapseOne" ).trigger( "expand" );
+    $(document).keydown(function(e){
+      // left arrow key - 37 , right arrow key - 39
+      // e.which accesses key id
+      // console.log(e.which)
+      if (e.which == 39){
+        moveRight();
+      }
+      // left arrow key
+      if (e.which == 37 ) {
+        moveLeft();
+      }
+
+      function moveRight(){
+        setTimeout(function(){ 
+          toggle_panel(index);
+          if (index==2){
+            index=0
+            toggle_panel(index)
+          }
+          else {
+            index+=1;
+            toggle_panel(index)
+          }
+        },500)
+      }
+      function moveLeft(){
+        setTimeout(function(){},1000) 
+        toggle_panel(index)
+        if (index==0) {
+          index=2
+          toggle_panel(index)
+        }
+        else {
+          index-=1;        
+          toggle_panel(index)
+        };
+      } 
+
+      // triggerCollapse()
+      // $("span").text(e.which);
+    });
+    // $("button").click(function(){
+    //   $("p").keypress();
+    // });
+
+
+    $("button").click(function(){
+
+      $('#collapse0').collapse('toggle')
+    // console.log("button clicked")
+    // var index = $("#accordion").accordion('option','active');
+    // var total = $("#accordion").children('div').length;
+    // index++;
+
+    // include restart same as previous answer     
+    // if (index >= total) {
+      // index = 0;
+    // }
+
+    // $("#accordion").accordion("option", "active", index);
+
+  })
+
+  });
+</script>
+
