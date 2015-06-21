@@ -7,7 +7,7 @@
   <!-- form to input username -->
   <div class="container">
     <div class="row">
-      <form  action="" class="form" id='form2'>
+      <form  action="" class="form" id='usernameForm'>
         <div class="jumbotron">
           <div class="form-group">
             <label for="inputUsername">To join a conversation choose a username</label> 
@@ -17,9 +17,9 @@
       </form>
     </div>
     <!-- messaging window -->
-    <div id="messaging_window" class="row"> 
+    <div id="messagingWindow" class="row"> 
       <div class="col-sm-4">
-        <form  action="" class="form-inline" id='form1'>
+        <form  action="" class="form-inline" id='messageForm'>
           <div class="form-group">
             <input type="message" class="form-control" id="inputMessage" autocomplete="off" placeholder="Enter message">
           </div>
@@ -34,7 +34,55 @@
       </div>
       <!-- list all the groups -->
       <div class="col-sm-4">
-        <p> different group </p>
+        <form id="groupForm">
+          <div class="form-group">
+            <input id="inputGroupName" autocomplete="off" placeholder=" join a group">
+          </div>
+        </form>
+        <form id="createGroupForm">
+          <input id="createGroup" autocomplete="off" placeholder=" create a group">
+        </form>
+        <p> different groups </p>
+        <ul id="list_groups"></ul>
+
+        <!-- accordeon showcasing different groups and their members -->
+        <div class="panel-group" id="groupAccordion">
+          <!-- append new groups here -->
+
+          <!-- this is were you create moar -->
+       <!--    <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingTwo">
+              <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#groupAccordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Collapsible Group Item #2
+                </a>
+              </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+              <div class="panel-body">
+                Anim 
+              </div>
+            </div>
+          </div>
+          <! create next -->
+
+          <!-- <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingThree">
+              <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#groupAccordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Collapsible Group Item #3
+                </a>
+              </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+              <div class="panel-body">
+              Anim 
+              </div>
+            </div>
+          </div> --> 
+          <!-- end of accordeon -->
+        </div>
+
       </div>
     </div>
   </div>

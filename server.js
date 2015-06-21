@@ -21,55 +21,84 @@ app.get('/',function(req,res){
 // each socket also fires a disconnect message
 
 
-var people_who_r_online={}
-var groups_people_are_in={}
+var people_who_r_online=[]
+var groups={}
 
 io.on('connection', function(socket){
-		// cant emit connectionz cuz becomes infinite loop
-		// io.emit('connectionz','A user has connected')
+	socket.on('username', function(username){
+		socket.username = username;
+		people_who_r_online.push(socket.username);
 
-		socket.on('username', function(username){
+		// socket.emit only emits the the specific socket
+		//broadcast emits to all other sockets
+		// io emits to al sockets
+		io.emit('user_connected',socket.username)
+		io.emit('people_online',people_who_r_online)
+		io.emit('refresh_groups',groups)
 
-			socket.username = username;
-			// now the local username is saved
-			// hash tbale of people who are online
-			people_who_r_online[socket.username] = true
-
-			io.emit('user connected',socket.username)
-			io.emit('people online',people_who_r_online)				
-
-			socket.on('chat message', function(msg){
-				var array_msg = msg.split(" ")
-				console.log(array_msg[0]=="join")
-				// check if it wants to join a room
-				if (array_msg[0]==='join'){
-					io.emit('chat message',"<b>"+socket.username+" joined the room "+array_msg[1]+"</b>")
-					socket.join(array_msg[1])					
-				}
-
-				//check ot it wanst to leave a room
-				else if (array_msg[0]==='leave'){
-					io.emit('chat message',"<b>"+socket.username+" left the room "+array_msg[1]+"</b>")
-					socket.leave(array_msg[1])	
-				}
-				// check if it wants to send to a specoific room
-				else if (array_msg[0]==="to"){
-					var res = msg.split(" ").slice(2).join(" ");
-					// str.split(" ").slice(2).join(" ");
-					var room=array_msg[1]
-					io.to(room).emit('chat message',"<b>"+room+"-"+socket.username+"</b>"+" "+ res);
-				}
-
-				else {
-					io.emit('chat message',socket.username,msg)
-				}
-			})
-			socket.on('disconnect',function(){
-				delete people_who_r_online[socket.username]
-				io.emit('people online',people_who_r_online)				
-				io.emit('user disconnected', "<b>"+socket.username+" "+"left the conversation"+"</b>",people_who_r_online)
-			})
+		socket.on('join_group',function(group_name){
+			// check if group exists and if user is not already part of group
+			if ((group_name in groups) && (groups[group_name].indexOf(socket.username)===-1)){
+				// add user to group name in groups
+				groups[group_name].push(socket.username)
+				// add user to group broadcast
+				socket.join(group_name)
+				io.emit('refresh_groups',groups)
+				console.log(groups)
+			}
+			else {
+				console.log('group doesnt exist or user is laready part of group')
+			}
 		})
+
+		socket.on('leave_group',function(group_name){
+			// check if group exists and if user is in the groups
+			if ((group_name in groups) && (groups[group_name].indexOf(socket.username)>-1)){
+				// get index of user in array belonging to the groups
+				var index = groups[group_name].indexOf(socket.username);
+				groups[group_name].splice(index,1);
+				io.emit('refresh_groups',groups)
+				console.log(groups)
+			}
+			else{
+				console.log()
+			}
+		})
+
+		socket.on('create_group',function(group_name){
+			// check if group name is taken
+			if (!(group_name in groups)){
+				groups[group_name] = [];
+				groups[group_name].push(socket.username);
+				io.emit('refresh_groups',groups);
+				socket.join(group_name)
+			}
+			else {
+				console.log("group already exits")
+			}
+		})			
+
+		socket.on('chat_message', function(msg){
+				// check if it wants to send to a specoific room
+				// if (array_msg[0]==="to"){
+				// 	var res = msg.split(" ").slice(2).join(" ");
+				// 	// str.split(" ").slice(2).join(" ");
+				// 	var room=array_msg[1]
+				// 	io.to(room).emit('chat message',"<b>"+room+"-"+socket.username+"</b>"+" "+ res);
+				// }
+
+				// else {
+				io.emit('chat_message',socket.username,msg)
+				// }
+			})
+		socket.on('disconnect',function(){
+				// remove user from online people and broadcast a message
+				var index = people_who_r_online.indexOf(socket.username);
+				people_who_r_online.splice(index,1);
+				io.emit('people_online',people_who_r_online)				
+				io.emit('user_disconnected',socket.username)
+			})
+	})
 })
 
 // log all requests to server
